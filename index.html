@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>每日教育 AI 應用情報</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg:          #EDE8DF;
+  --card:        #F6F1E7;
+  --card-hover:  #F0E9DA;
+  --ink:         #4F4A42;
+  --ink-soft:    #7C7368;
+  --ink-faint:   #A39A8E;
+  --border:      #D8CFBE;
+  --border-soft: #E5DDCD;
+
+  --sage:        #A8B5A0;
+  --sage-bg:     #DDE2D2;
+  --sage-ink:    #4F5C46;
+  --mauve:       #BFA8A8;
+  --mauve-bg:    #E6D8D5;
+  --mauve-ink:   #7E5A5A;
+  --terra:       #C9A99C;
+  --terra-bg:    #ECDDD3;
+  --terra-ink:   #8B5E51;
+  --slate:       #9FA8B0;
+  --slate-bg:    #DCE0E2;
+  --slate-ink:   #4F5A66;
+  --olive:       #B5AD8A;
+  --olive-bg:    #E5DFC8;
+  --olive-ink:   #6E6646;
+
+  --takeaway-bg: #EFE7D6;
+  --takeaway-ink:#6B5E45;
+  --takeaway-bd: #DBCFB3;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg); color: var(--ink);
+  line-height: 1.78; -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 780px; margin: 0 auto; padding: 32px 26px 80px; }
+
+header { margin-bottom: 22px; }
+.kicker { font-size: 12px; letter-spacing: 0.2em; color: var(--ink-soft); text-transform: uppercase; margin-bottom: 10px; font-weight: 500; }
+h1 { font-size: 28px; font-weight: 600; margin: 0 0 12px; letter-spacing: -0.01em; color: var(--ink); }
+.meta { font-size: 13px; color: var(--ink-soft); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.meta .dot { color: var(--ink-faint); }
+.badge { display: inline-block; padding: 3px 10px; background: var(--sage-bg); color: var(--sage-ink); border-radius: 999px; font-size: 11.5px; font-weight: 600; letter-spacing: 0.04em; }
+
+.intro { background: var(--card); border: 1px solid var(--border-soft); border-radius: 14px; padding: 16px 20px; margin-bottom: 20px; font-size: 14px; color: var(--ink-soft); line-height: 1.7; }
+
+.day-tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--border-soft);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.tab {
+  background: transparent;
+  border: none;
+  padding: 10px 14px 11px;
+  border-radius: 10px 10px 0 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: var(--ink-soft);
+  font-family: inherit;
+  position: relative;
+  transition: background 0.15s, color 0.15s;
+  min-width: 68px;
+  flex: 0 0 auto;
+}
+.tab:hover { background: var(--card); color: var(--ink); }
+.tab.active {
+  background: var(--card);
+  color: var(--ink);
+  border-bottom: 2px solid var(--sage);
+  margin-bottom: -2px;
+}
+.tab.empty { color: var(--ink-faint); }
+.tab.empty:hover { background: var(--card-hover); color: var(--ink-soft); }
+.tab-dow { font-size: 11px; letter-spacing: 0.1em; font-weight: 500; }
+.tab-date { font-size: 15px; font-weight: 600; letter-spacing: 0.01em; }
+.tab-today {
+  position: absolute;
+  top: 3px; right: 4px;
+  font-size: 8.5px;
+  background: var(--terra);
+  color: #fff;
+  padding: 1px 5px;
+  border-radius: 6px;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+.day-pane[hidden] { display: none; }
+.pane-header {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--border-soft);
+}
+.pane-header strong { color: var(--ink); font-weight: 600; }
+.pane-header .count { color: var(--terra-ink); font-weight: 600; }
+
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--ink-soft);
+  margin: 26px 0 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-soft);
+  text-transform: uppercase;
+}
+.section-title:first-child { margin-top: 0; }
+
+.story { background: var(--card); border: 1px solid var(--border-soft); border-radius: 14px; padding: 22px 24px; margin-bottom: 14px; transition: border-color 0.2s, background 0.2s; }
+.story:hover { border-color: var(--border); background: var(--card-hover); }
+.story .tag { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; padding: 3px 9px; border-radius: 6px; }
+.tag-product { background: var(--sage-bg);  color: var(--sage-ink); }
+.tag-funding { background: var(--terra-bg); color: var(--terra-ink); }
+.tag-partner { background: var(--slate-bg); color: var(--slate-ink); }
+.tag-research{ background: var(--olive-bg); color: var(--olive-ink); }
+.tag-market  { background: var(--mauve-bg); color: var(--mauve-ink); }
+.tag-taiwan  { background: var(--sage-bg);  color: var(--sage-ink); }
+
+.story h2 { font-size: 17.5px; font-weight: 600; margin: 0 0 10px; letter-spacing: -0.005em; line-height: 1.5; color: var(--ink); }
+.story p { margin: 0 0 12px; font-size: 14.5px; color: var(--ink); line-height: 1.8; }
+
+.takeaway { background: var(--takeaway-bg); border: 1px solid var(--takeaway-bd); border-radius: 10px; padding: 12px 14px; margin: 12px 0 8px; }
+.takeaway-label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: var(--takeaway-ink); text-transform: uppercase; margin-bottom: 6px; }
+.takeaway p { margin: 0; font-size: 13.8px; color: var(--takeaway-ink); line-height: 1.72; }
+
+.story .source { font-size: 12.5px; color: var(--ink-soft); margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border-soft); }
+.story .source a { color: #8B7A6E; text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 1px; }
+.story .source a:hover { color: var(--ink); border-bottom-color: var(--ink-faint); }
+
+.empty-state {
+  background: var(--card);
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+  padding: 60px 24px;
+  text-align: center;
+  color: var(--ink-soft);
+}
+.empty-state .empty-date { font-size: 16px; color: var(--ink); margin: 0 0 8px; font-weight: 600; }
+.empty-state .empty-hint { font-size: 13.5px; margin: 0; line-height: 1.7; }
+
+footer { margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--border-soft); font-size: 12.5px; color: var(--ink-faint); text-align: center; line-height: 1.8; }
+footer #updated { color: var(--ink-soft); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">每日情報 · 教育 AI 應用</div>
+  <h1>全球教育 AI 應用動態</h1>
+  <div class="meta">
+    <span id="weekrange">本週 2026/5/11 – 5/17</span>
+    <span class="dot">·</span>
+    <span class="badge">中文深度版</span>
+    <span class="dot">·</span>
+    <span>每週一重置</span>
+  </div>
+</header>
+
+<div class="intro">
+  專為 EdTech 產品團隊設計的每日情報摘要。每天清晨 7:00（台北時間）自動更新；情報保留一週，週一清晨會重置。點擊上方 tab 可切換查看本週不同日期的內容。
+</div>
+
+<nav class="day-tabs" id="dayTabs">
+  <button class="tab" data-day="2026-05-11">
+    <span class="tab-dow">週一</span>
+    <span class="tab-date">5/11</span>
+  </button>
+  <button class="tab active" data-day="2026-05-12">
+    <span class="tab-dow">週二</span>
+    <span class="tab-date">5/12</span>
+    <span class="tab-today">今日</span>
+  </button>
+  <button class="tab empty" data-day="2026-05-13">
+    <span class="tab-dow">週三</span>
+    <span class="tab-date">5/13</span>
+  </button>
+  <button class="tab empty" data-day="2026-05-14">
+    <span class="tab-dow">週四</span>
+    <span class="tab-date">5/14</span>
+  </button>
+  <button class="tab empty" data-day="2026-05-15">
+    <span class="tab-dow">週五</span>
+    <span class="tab-date">5/15</span>
+  </button>
+  <button class="tab empty" data-day="2026-05-16">
+    <span class="tab-dow">週六</span>
+    <span class="tab-date">5/16</span>
+  </button>
+  <button class="tab empty" data-day="2026-05-17">
+    <span class="tab-dow">週日</span>
+    <span class="tab-date">5/17</span>
+  </button>
+</nav>
+
+<!-- ========= 2026-05-12（今日）========= -->
+<section class="day-pane" data-day="2026-05-12">
+  <div class="pane-header">
+    <strong>2026 年 5 月 12 日（週二）</strong>　 ·　<span class="count">共 5 則</span>
+  </div>
+
+  <div class="section-title">機構合作</div>
+
+  <article class="story">
+    <span class="tag tag-partner">機構合作 · Google × Khan Academy</span>
+    <h2>Khan Academy 在 BETT 2026 與 Google 正式合作：Gemini 進駐 Writing Coach、Reading Coach</h2>
+    <p>在 BETT 2026 教育科技展，Khan Academy 與 Google 宣布深度合作：Gemini 模型即日起整合進 Khan Academy 的 Writing Coach（7–12 年級寫作家教），稍後 Reading Coach 亦將整合，並計畫在 2026–27 學年針對學區端推出全新平台重新設計。</p>
+    <p>這意味著 Khan Academy 不再是「只用 GPT-4 的 Khanmigo」單一架構——未來會有 GPT-4 + Gemini 雙模型並行。也呼應了上週 Khan Academy 承認 Khanmigo 使用率僅 15% 的問題：用最強的模型組合應該能改善體驗。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>「同時擁抱多個 LLM 供應商」開始成為中大型 EdTech 的標配。建議把產品的 LLM 呼叫抽象成單一介面層（例如 LiteLLM、自建 router），可即時切換 OpenAI／Anthropic／Google／開源模型。長期可降低供應商鎖死風險，也能依任務挑成本／品質最匹配的模型。</p>
+    </div>
+    <div class="source">來源：<a href="https://blog.google/products-and-platforms/products/education/khan-academy-partnership/" target="_blank" rel="noopener">Google Blog · Khan Academy Partnership</a></div>
+  </article>
+
+  <article class="story">
+    <span class="tag tag-partner">機構合作 · 加州社區大學</span>
+    <h2>加州社區大學系統將部署 AI 家教：116 所學校、200 萬學生的公部門合約</h2>
+    <p>加州社區大學系統（CCC）宣布將為轄下 116 所社區大學、約 200 萬學生部署 AI 家教。具體廠商與技術棧細節將陸續公布，但這是目前美國公立高教體系最大規模的單一 AI 採購案之一。</p>
+    <p>社區大學的學生組成複雜——成人再教育、職業導向、補救教學需求高——對 AI 家教是非常匹配的場景，因為這些學生時間零碎、需要彈性學習，並對教學內容有強烈的個人化需求。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>「成人再教育＋AI 家教」是被低估的細分市場。台灣對應市場可看：勞動部勞動力發展署、各大學推廣教育中心、技職院校。若你的產品有技職／補救教學內容，加州 CCC 的招標公告與得標廠商值得追，會出現可借鏡的 SOW、定價、SLA 模板。</p>
+    </div>
+    <div class="source">來源：<a href="https://edsource.org/updates/california-community-colleges-to-launch-artificial-intelligence-tutors" target="_blank" rel="noopener">EdSource · California Community Colleges AI Tutors</a></div>
+  </article>
+
+  <div class="section-title">產品動態</div>
+
+  <article class="story">
+    <span class="tag tag-product">產品動態 · D2L Lumi</span>
+    <h2>D2L 正式發表 Lumi 全套 AI 學習工具：先垂直化攻護理教育</h2>
+    <p>大型 LMS 廠商 D2L 在 5 月試點後正式發表 Lumi 系列：Lumi（AI 原生個人化學習建議）、Lumi Tutor（家教）、Lumi Feedback（即時回饋）、Creator+（內容生成）、Performance+（學習分析）。首波部署優先聚焦護理教育。</p>
+    <p>值得注意的不是「又一個 AI 套件」，而是「先攻一個科系」的策略：D2L 沒有試圖一次涵蓋所有學科，而是用護理教育驗證模型、累積案例、再橫向擴展到其他科系。這是 LMS 廠商面對 OpenAI／Google 的差異化打法。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>對小型 EdTech 來說，「選一個垂直領域做深做透」比「橫向覆蓋」更務實。台灣可切入的垂直領域有：護理教育、醫師繼續教育、考照類（會計師、律師、各種國家考試）。建議先選一個科目做出有 case study 的成效，再橫向擴展。</p>
+    </div>
+    <div class="source">來源：<a href="https://www.edtechinnovationhub.com/news/etih-top-ten-ai-integrity-enterprise-rollouts-and-the-2026-awards-shortlist-shape-the-week-in-edtech" target="_blank" rel="noopener">ETIH · D2L Lumi 發表</a></div>
+  </article>
+
+  <article class="story">
+    <span class="tag tag-product">產品動態 · Schoolhouse.world</span>
+    <h2>Schoolhouse.world 用 Gemini 訓練真人 tutor：AI 不取代人、AI 改善人</h2>
+    <p>非營利同儕家教平台 Schoolhouse.world 開始使用 Gemini 為其志工 tutor 提供回饋與練習模擬。Gemini 會分析 tutor 帶課過程的錄音、給出改善建議，並提供模擬學生練習場景。</p>
+    <p>這是一個被低估的產品形態：「AI 訓練人類教學者」。對家長與學校而言，「AI 增強的真人家教」往往比「純 AI 家教」更可接受、也更有溢價空間，因為它保留了人的情感連結，又獲得 AI 的規模化品質控制。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>如果你的 App 有真人教師（補習班、線上家教平台），可以考慮加一條「AI Coach for Tutors」產品線：給教師上課後的回饋報告、優化教學話術、提供差異化教學素材。這是 B2B SaaS 型收入，毛利高且不直接跟 AI 家教競爭，是混合產品的好切入點。</p>
+    </div>
+    <div class="source">來源：<a href="https://blog.google/products-and-platforms/products/education/khan-academy-partnership/" target="_blank" rel="noopener">Google Blog · Schoolhouse + Gemini</a></div>
+  </article>
+
+  <div class="section-title">市場趨勢</div>
+
+  <article class="story">
+    <span class="tag tag-market">市場趨勢 · TIME100</span>
+    <h2>TIME100 教育公司 2026：AI 巨頭與 EdTech 老牌同台，產業重組訊號明確</h2>
+    <p>TIME 雜誌公布 2026 年「最具影響力的 100 家教育公司」，AI 大廠如 Anthropic、Google、OpenAI 與 EdTech 老牌如 Khan Academy、Duolingo、Coursera 並列。這份榜單實質上是教育產業的「股權地圖」——誰被視為長期玩家、誰只是搭順風車。</p>
+    <p>產業重組訊號很明確：教育市場正在從「課程內容＋平台」的傳統雙層，演變為「LLM 基礎模型＋垂直應用＋通路」的三層結構。LLM 公司用低價或免費策略往應用層擠壓，EdTech 公司則往 LLM 反向延伸（自訓模型、買 LLM 公司）。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>在台灣 EdTech 市場，跟 Anthropic／Google／OpenAI 的關係建議定位為「整合而非對抗」——把它們當作基礎設施供應商，把自己定位為通路與本地化價值層。同時可主動研究 TIME100 榜上具備亞洲擴張意願的公司（如 Coursera、Duolingo），找出 partnership 切入點。</p>
+    </div>
+    <div class="source">來源：<a href="https://time.com/article/2026/04/29/time100-companies-education/" target="_blank" rel="noopener">TIME · 100 Most Influential Education Companies 2026</a></div>
+  </article>
+</section>
+
+<!-- ========= 2026-05-11 ========= -->
+<section class="day-pane" data-day="2026-05-11" hidden>
+  <div class="pane-header">
+    <strong>2026 年 5 月 11 日（週一）</strong>　 ·　<span class="count">共 11 則</span>
+  </div>
+
+  <div class="section-title">產品動態</div>
+
+  <article class="story">
+    <span class="tag tag-product">產品動態 · Khan Academy</span>
+    <h2>Khanmigo 大改版：用「下一題能否獨立答對」當作學習指標</h2>
+    <p>Khan Academy 公開承認，旗下 AI 家教 Khanmigo 雖然推出後備受關注，但在有取用權的學生中只有約 15% 會固定使用。為解決參與度問題，預計在 2026 年夏天向全部合作學區推出重新設計的版本，先前已在部分學區做試點。</p>
+    <p>更值得注意的是評估指標的轉變：Khan Academy 開始追蹤「next-item correctness」——學生在收到 AI 協助之後，能否獨立答對下一題。這把指標從「AI 加持下的表現」直接切換成「學習遷移效果」，是少見的、能反映真實學習的產品指標。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>產品功能做得出來只是門檻，「能讓使用者持續用」才是護城河。把 KPI 從「使用時長」或「答題正確率」改成「移除 AI 協助後的獨立表現」，是值得借鏡的設計思維——對於台灣 K-12／升學市場的 App 尤其關鍵，家長付費的本質就是要「會」，不是「看起來會」。</p>
+    </div>
+    <div class="source">來源：<a href="https://www.edtechinnovationhub.com/news/only-15-percent-of-students-with-access-to-khanmigo-actually-use-it-khan-academy-admits" target="_blank" rel="noopener">EdTech Innovation Hub · Khanmigo Redesign</a></div>
+  </article>
+
+  <article class="story">
+    <span class="tag tag-product">產品動態 · Google</span>
+    <h2>Google 5/13 啟動全套教育 AI 推進：Gemini 進 Moodle、NotebookLM 額度翻倍、600 萬教師免費培訓</h2>
+    <p>Google 宣布一系列教育 AI 動作將於 5 月 13 日上線：與 ISTE+ASCD 合作，為美國 600 萬名教師提供免費 AI 素養培訓；Gemini 正式以 AI Provider 身分整合進 Moodle（全球最大開源 LMS）；NotebookLM 對 Education Plus 用戶的使用額度翻倍，擴大測驗、字卡與語音摘要的容量。</p>
+    <p>這是一次很有策略意義的多點佈局：教師端（培訓）、平台端（LMS 整合）、學生端（學習工具額度）同時推進，把 Gemini 嵌入教學流程的每一個節點。對應的潛台詞是 Google 要把 Workspace for Education 的安裝基礎，轉成 AI 服務的分發通道。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>單點工具會越來越難打贏「平台＋AI＋培訓」的整合戰。短期可考慮把產品做成 Moodle / Google Classroom 的擴充元件，或主動找上 ISTE+ASCD 這類教師專業組織的中文版對應單位（如台灣教師專業發展中心、學科輔導團）做培訓綁定，建立分發優勢。</p>
+    </div>
+    <div class="source">來源：<a href="https://www.edtechinnovationhub.com/news/etih-top-ten-ai-integrity-enterprise-rollouts-and-the-2026-awards-shortlist-shape-the-week-in-edtech" target="_blank" rel="noopener">ETIH · Top Ten EdTech News</a></div>
+  </article>
+
+  <article class="story">
+    <span class="tag tag-product">產品動態 · 工具趨勢</span>
+    <h2>NotebookLM 正悄悄吃掉 Quizlet 與 Anki 的午餐</h2>
+    <p>NotebookLM 原本被定位為「文件分析助手」，但教育場景的使用呈現快速增長：學生上傳教材後，可自動生成測驗題、字卡、Podcast 形式的語音摘要與互動式 Q&A。Google 在 5 月把 Education Plus 用戶的容量翻倍，等於正式承認它已成為主力學習工具。</p>
+    <p>對 Quizlet（字卡）、Anki（間隔複習）、Chegg（題庫）這類專做學習輔助的 App 是直接威脅——NotebookLM 不收額外費用、不需要學生手動製作題目，又跟 Google Drive 深度整合。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>「上傳教材→自動生成字卡／測驗」這個工作流，正在從付費功能變成預期功能。如果你的 App 還靠手動建題庫做主要差異化，可能要重新想護城河：是內容本地化（台灣課綱對應）？是學習路徑設計？還是與學校／補習班的整合？把核心價值從「生成」改成「組織與評估」。</p>
+    </div>
+    <div class="source">來源：<a href="https://edtechmagazine.com/k12/article/2026/05/how-gemini-education-can-optimize-your-classroom" target="_blank" rel="noopener">EdTech Magazine · Gemini for Education</a></div>
+  </article>
+
+  <div class="section-title">資金與併購</div>
+
+  <article class="story">
+    <span class="tag tag-funding">資金併購 · OpenAI</span>
+    <h2>OpenAI 收購教師備課平台 Chalkie：垂直化開始了</h2>
+    <p>OpenAI 收購 AI 備課平台 Chalkie，是其在教育垂直領域的首批明確動作。Chalkie 主打用 AI 幫教師生成課程計畫、活動設計、評量題目與差異化教學素材，目標客群是 K-12 教師。</p>
+    <p>這次併購有兩個訊號值得追：第一，OpenAI 不再只賣 GPT API，開始往「教師專用入口」的垂直應用走；第二，這建立了一個退場參考——做得不錯的教育 AI 新創，現在有大型 LLM 平台會出價買。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>大型 LLM 平台垂直化會壓縮通用型 AI 教育工具的生存空間。在地市場（繁中、台灣課綱、亞洲文化情境）反而是 OpenAI 短期難以做到位的差異化護城河。如果做 B2B 教師工具，要思考的不是「我比 ChatGPT 強多少」，而是「我做了什麼 ChatGPT 不會做的本地化整合」。</p>
+    </div>
+    <div class="source">來源：<a href="https://www.edtechinnovationhub.com/news/milestone-for-ai-powered-edtech-startup-chalkie-as-it-is-snapped-up-by-openai" target="_blank" rel="noopener">ETIH · OpenAI acquires Chalkie</a></div>
+  </article>
+
+  <article class="story">
+    <span class="tag tag-funding">資金併購 · Series A</span>
+    <h2>AI 學習 App Gizmo 拿下 2,200 萬美元 A 輪：1,300 萬使用者的成績單</h2>
+    <p>消費型 AI 學習 App Gizmo 在 2026 年 4 月完成 2,200 萬美元 A 輪募資，累積使用者已達 1,300 萬人。資金主要投入工程／AI 團隊擴編，以及美國大學校園市場的拓展。</p>
+    <p>Gizmo 的故事代表了一個趨勢：消費端、低價、社群驅動的學習 App，仍能在 AI 工具大爆發的市場中拿到強勢增長。它把 AI 包裝成遊戲化的「翻牌、刷題、配對」體驗，降低使用門檻。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>消費端 AI 學習產品的募資門檻明顯抬高——A 輪要 1,000 萬美元等級的數據才能談得到。建議追蹤 Gizmo、Quizlet、Duolingo 的留存指標（DAU/MAU 比、7 日留存）做為自家產品的對標。如果你的 App 在台灣有一定用戶基礎，現在是國際募資窗口張開的時候。</p>
+    </div>
+    <div class="source">來源：<a href="https://techcrunch.com/2026/04/15/ai-learning-app-gizmo-levels-up-with-13m-users-and-a-22m-investment/" target="_blank" rel="noopener">TechCrunch · Gizmo Series A</a></div>
+  </article>
+
+  <article class="story">
+    <span class="tag tag-market">市場趨勢 · 全球</span>
+    <h2>2026 教育 AI 賽道全景：2,800 家新創、$42 億 VC、6 成資金集中在「練習工具」與「AI 家教」</h2>
+    <p>截至 2026 年，全球教育 AI 新創數量達 2,800 家，是 2023 年的 18 倍。2025 年單一年度的 VC 投入達 42 億美元。其中「AI 練習工具」與「AI 家教平台」合計占過去 12 個月披露交易的 11/21，吸金 1.18 億美元，占整體披露資金的 64.2%。</p>
+    <p>另一個值得注意的數字：早期種子輪估值大幅上修——Vimi、Giant、Pensive 等早期新創在 2026 上半年都拿到 700 萬至 1,200 萬美元的種子輪，比 18 個月前漲了一截。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>「AI 練習工具＋AI 家教」是當下最熱也最擁擠的賽道。若想做差異化，建議切「練習」的細分情境（如華語學習者、亞洲課綱、特殊教育）或「家教」的非主流年齡層（成人再教育、退休學習者）。資金集中的地方競爭最激烈，但也最容易吸引投資人——關鍵是要在 metric 上拿出超越平均的留存或學習效果。</p>
+    </div>
+    <div class="source">來源：<a href="https://newmarketpitch.com/blogs/news/ai-education-funding-analysis" target="_blank" rel="noopener">New Market Pitch · AI Education Funding Analysis</a></div>
+  </article>
+
+  <div class="section-title">效果研究</div>
+
+  <article class="story">
+    <span class="tag tag-research">效果研究 · 土耳其 RCT</span>
+    <h2>沒有教學設計的 GPT 反而傷學習：移除 AI 之後成績比沒用過的還差 17%</h2>
+    <p>Bastani 等人的高中數學隨機對照研究有兩組設計：A 組學生在練習時可使用未經改造的 GPT-4（GPT Base），B 組使用經過教學設計提示的 GPT Tutor（會引導學生思考、不直接給答案）。結果驚人——A 組在有 AI 時成績 +48%，但 AI 被收走後成績比從未用過 AI 的對照組還差 17%。</p>
+    <p>相對地，B 組（GPT Tutor）使用時成績 +127%，移除後仍與對照組相當。換句話說，把 AI 直接給學生用不僅沒幫助，可能造成「過度依賴、技能退化」；只有經過「教學鷹架」設計的 AI 工具，才能轉化成真正的學習。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>這份研究是教育 AI 產品設計最重要的依據之一。具體可採取：（1）AI 不直接給答案、改成蘇格拉底式發問；（2）每題答對後加一個「再來一題沒有提示」的確認練習；（3）追蹤學生「移除 AI 後的獨立完成率」並回饋給家長／教師。這也是潛在的行銷武器——可以對家長明說「我們的 AI 跟 ChatGPT 不一樣，是有教學設計的」。</p>
+    </div>
+    <div class="source">來源：<a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4895486" target="_blank" rel="noopener">SSRN · Bastani et al., Generative AI Without Guardrails Can Harm Learning</a></div>
+  </article>
+
+  <article class="story">
+    <span class="tag tag-research">效果研究 · 數學 Meta 分析</span>
+    <h2>22 篇實證研究 Meta 分析：GenAI 對數學學習有中度正面效果（g = 0.534）</h2>
+    <p>一篇涵蓋 2023–2025 年、22 篇研究、46 個獨立樣本、總計 N=5,232 的 Meta 分析發現，GenAI 對學生數學學習有中等規模的正面效果（Hedges' g = 0.534）。影響效果大小的關鍵因素是「GenAI 整合進教學的深度」、「樣本規模」與「學習內容」。</p>
+    <p>另一篇針對 104 名五年級學生的對照研究發現，使用 ChatGPT 輔助數學解題系統的實驗組，後測成績、學習興趣與動機都顯著優於對照組。注意：這些研究都不是「把 ChatGPT 丟給學生用」，而是「整合進有教學設計的系統」。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>g = 0.534 是不錯但不誇張的效果量，可以拿來做產品行銷的可信參考點——不要說「提升 200% 學習效果」這種誇張話。如果做數學 App，建議照搬論文中的研究設計，找一所合作學校做小規模 RCT，產出自己的「g 值報告」當作 B2B 銷售素材。</p>
+    </div>
+    <div class="source">來源：<a href="https://www.mdpi.com/2227-7102/16/1/140" target="_blank" rel="noopener">MDPI Education Sciences · GenAI Math Meta-Analysis</a></div>
+  </article>
+
+  <article class="story">
+    <span class="tag tag-research">效果研究 · 大規模試點</span>
+    <h2>Khanmigo 大規模試點 + NWEA RCT：每週 30 分鐘 = 多 2–3 週的學習成果</h2>
+    <p>Khan Academy 在 2026 年公布的試點數據：跨 200 所學校、15,000 名學生，每週至少使用 Khanmigo 30 分鐘以上的學生，學習進展相當於「多 2–3 週傳統教學」的成果。NWEA 的 2025 年 RCT 則發現，AI 家教的學習效果在數學上是 0.1–0.2 個標準差——有意義但僅是優質真人家教效果量的一半。</p>
+    <p>兩份研究的差異透露了一個務實訊息：AI 家教確實有效，但效果規模比期待中的小。「AI 不會取代真人家教」是現階段最務實的定位。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>定位上避免「AI 取代家教」的話術——容易被家長戳破。改成「AI 是預習／複習的輔助，主科加 AI 比單獨上家教更有效率」更可信。同時建議在產品內建一個「每週使用 30 分鐘」的習慣追蹤機制，配合家長端 dashboard。</p>
+    </div>
+    <div class="source">來源：<a href="https://eoxysit.com/blogs/the-ai-tutoring-revolution-2026-inside-the-8-7b-edtech-unicorn-that-10xd-learning-outcomes/" target="_blank" rel="noopener">Eoxys · AI Tutoring Revolution 2026</a></div>
+  </article>
+
+  <div class="section-title">機構合作與市場結構</div>
+
+  <article class="story">
+    <span class="tag tag-partner">機構合作 · 高等教育</span>
+    <h2>Northeastern 大學與 Anthropic 全校級合作：給 Claude 開「校園版」的範本</h2>
+    <p>美國 Northeastern University 宣布與 Anthropic 簽訂全校級合作，將 Claude AI 部署到所有校區，提供師生使用。這是 LLM 公司直接切入高等教育機構市場的最新範例，也是 Anthropic 對 OpenAI ChatGPT Edu 的正面回應。</p>
+    <p>合作內容涵蓋：學生課業協助、教師備課、研究人員工具、行政自動化。重要的是這種「全校單一 LLM 供應商」的模式，會排擠校內其他 AI 工具的採購預算。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>若你的產品瞄準大學市場，要先想清楚：是要成為「校方採購的單一供應商」（高採購難度、高 ARR），還是「跟 Claude／ChatGPT Edu 並存的特定工具」（小單價、靠功能取勝）。台灣大專院校的 LLM 採購窗口將在 2026 下半年陸續啟動，這是時間窗口。</p>
+    </div>
+    <div class="source">來源：<a href="https://8allocate.com/blog/the-impact-of-ai-in-edtech-7-market-use-cases/" target="_blank" rel="noopener">8allocate · AI in EdTech Use Cases</a></div>
+  </article>
+
+  <article class="story">
+    <span class="tag tag-market">市場趨勢 · 全球</span>
+    <h2>Gartner 預測：2026 年底前 40% 企業應用會嵌入「任務型 AI 代理」，教育是首批受惠領域</h2>
+    <p>Gartner 預測，2026 年底前約 40% 的企業應用會嵌入任務型 AI 代理（agentic AI）。教育是 Gartner 列出的優先採用領域，主要用例包含：個人化學習路徑、自主家教、學生留存與校友互動、教師副駕（co-pilot）、行政自動化、AI 驅動的虛擬教室。</p>
+    <p>學習分析（learning analytics）市場本身從 2025 年的 140.5 億美元，預計成長到 2030 年的 372.1 億美元。換言之，「AI 代理」加上「即時學習分析」會是接下來 12–18 個月最主要的產品形態轉變。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>產品 roadmap 上要排「Agent 模式」的迭代——從現在的「使用者問、AI 答」進化到「AI 主動偵測學生狀況、推薦下一步」。建議先做一個「最小可行的 Agent」：例如偵測學生連續錯誤超過 3 次就主動提醒並推薦補救練習。同時把「家長／教師端的學習分析儀表板」設計納入下一版，這在 B2B 銷售時是必備。</p>
+    </div>
+    <div class="source">來源：<a href="https://8allocate.com/blog/agentic-ai-in-education-use-cases-trends-and-implementation-playbook/" target="_blank" rel="noopener">8allocate · Agentic AI in Education</a></div>
+  </article>
+
+  <div class="section-title">台灣與亞洲動態</div>
+
+  <article class="story">
+    <span class="tag tag-taiwan">台灣動態 · 教育部</span>
+    <h2>台灣《AI 行動計畫 2.0》收尾年：「因材網」AI 對話式教學與 AI 教師培訓擴大</h2>
+    <p>2026 年是台灣《AI 行動計畫 2.0》（2023–2026）的收尾年。教育部以「AI 教育化、教育 AI 化」雙軌策略推進：在 K-12 端，將運算思維、程式設計、AI 應用納入十二年國教資訊科技課綱；在大學端透過「AI 技術及應用人才培育計畫」對接產業。</p>
+    <p>實務上，教育部已將「因材網」升級為具備「AI 代理對話式教學」與「學習診斷」的智慧學習系統，提供國中小學生個人化學習路徑、教師可用於適性教學。對民間 EdTech 公司而言，因材網既是公共建設、也是潛在的整合介面。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>若你的 App 與台灣 K-12 課綱對應，可以主動研究因材網的開放 API 或內容對接窗口，把自家內容變成「因材網推薦的延伸練習」之一。下一期《AI 行動計畫 3.0》預計 2026 下半年規劃，是直接接觸教育部數位學習司、爭取公私協力資源的時間點。</p>
+    </div>
+    <div class="source">來源：<a href="https://www.edu.tw/News_Content.aspx?n=9E7AC85F1954DDA8&s=D4C4CD32CAE3FF5D" target="_blank" rel="noopener">教育部 · AI 教育整體實施策略</a></div>
+  </article>
+
+  <article class="story">
+    <span class="tag tag-partner">亞洲動態 · 新加坡</span>
+    <h2>新加坡 AI@NIE 五年計畫：教師培訓全面下放，2026 內所有層級教師都將受訓</h2>
+    <p>新加坡國立教育學院（NIE）啟動 AI@NIE 五年計畫，目標是把 AI 素養（含風險認知、教學整合）培訓擴及全部層級的教師。新加坡同時推動全國性的學生 AI 素養計畫，特色是把「批判性思考」與「倫理思辨」放在工具操作之前。</p>
+    <p>日本與韓國則走另一條路：韓國 2026 年 2 月通過《AI 行動計畫》內含 99 項執行任務、300+ 政策建議，著重 AI 在作業協助與情感支持上的應用；日本選定多所學校試點 AI 教學新指引，強調學生「批判性評估 AI」的能力培養。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>亞洲三地（新／日／韓）在 2026 都將「教師端培訓」做為主軸，是國際擴張的時間窗。建議從新加坡切入：英語環境、政府高度開放國際合作、市場規模可控適合試點。台灣公司有「繁中課綱經驗 + 漢字文化圈內容」的天然優勢，與日韓有合作潛力，但需先準備 case study 與效果量數據。</p>
+    </div>
+    <div class="source">來源：<a href="https://crpe.org/shockwaves-and-innovations-how-nations-worldwide-are-dealing-with-ai-in-education/" target="_blank" rel="noopener">CRPE · Shockwaves and Innovations</a></div>
+  </article>
+</section>
+
+<!-- ========= 空白占位 pane（未來日期共用）========= -->
+<section class="day-pane" id="emptyPane" hidden>
+  <div class="empty-state">
+    <p class="empty-date" id="emptyPaneDate">—</p>
+    <p class="empty-hint">本日尚未產出情報。<br>排程任務將於每天清晨 7:00（台北時間）自動更新。</p>
+  </div>
+</section>
+
+<footer>
+  資料由 Claude 自動彙整於每日清晨 7:00（台北時間）· 情報保留一週，週一清晨自動重置<br>
+  最近更新：<span id="updated">2026-05-12 07:00 (Asia/Taipei)</span>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  const tabs = document.querySelectorAll('.tab');
+  const panes = document.querySelectorAll('.day-pane[data-day]');
+  const emptyPane = document.getElementById('emptyPane');
+  const emptyPaneDate = document.getElementById('emptyPaneDate');
+  const dowMap = {
+    '一':'週一','二':'週二','三':'週三','四':'週四','五':'週五','六':'週六','日':'週日'
+  };
+
+  function show(day, btn) {
+    tabs.forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    panes.forEach(p => p.hidden = true);
+    emptyPane.hidden = true;
+
+    const matched = document.querySelector('.day-pane[data-day="' + day + '"]');
+    if (matched) {
+      matched.hidden = false;
+    } else {
+      const dow = btn.querySelector('.tab-dow') ? btn.querySelector('.tab-dow').textContent : '';
+      const dt = btn.querySelector('.tab-date') ? btn.querySelector('.tab-date').textContent : day;
+      emptyPaneDate.textContent = dow + ' ' + dt;
+      emptyPane.hidden = false;
+    }
+  }
+
+  tabs.forEach(btn => {
+    btn.addEventListener('click', function(){
+      show(this.dataset.day, this);
+    });
+  });
+})();
+</script>
+</body>
+</html>
