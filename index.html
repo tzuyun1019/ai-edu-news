@@ -194,14 +194,14 @@ footer #updated { color: var(--ink-soft); }
     <span class="tab-dow">週二</span>
     <span class="tab-date">5/12</span>
   </button>
-  <button class="tab active" data-day="2026-05-13">
+  <button class="tab" data-day="2026-05-13">
     <span class="tab-dow">週三</span>
     <span class="tab-date">5/13</span>
-    <span class="tab-today">今日</span>
   </button>
-  <button class="tab empty" data-day="2026-05-14">
+  <button class="tab active" data-day="2026-05-14">
     <span class="tab-dow">週四</span>
     <span class="tab-date">5/14</span>
+    <span class="tab-today">今日</span>
   </button>
   <button class="tab empty" data-day="2026-05-15">
     <span class="tab-dow">週五</span>
@@ -217,8 +217,143 @@ footer #updated { color: var(--ink-soft); }
   </button>
 </nav>
 
-<!-- ========= 2026-05-13（今日）========= -->
-<section class="day-pane" data-day="2026-05-13">
+<!-- ========= 2026-05-14（今日）========= -->
+<section class="day-pane" data-day="2026-05-14">
+  <div class="pane-header">
+    <strong>2026 年 5 月 14 日（週四）</strong>　 ·　<span class="count">共 10 則</span>
+  </div>
+
+  <div class="section-title">產品動態</div>
+
+  <article class="story">
+    <span class="tag tag-product">產品動態 · Instructure</span>
+    <h2>Canvas 推 IgniteAI Agent：把低價值教務自動化交給 AI，師資重心轉向教學設計</h2>
+    <p>Instructure 正式發表 Canvas 的 IgniteAI Agent——一個能自動化教師的「低價值工作流」的代理 AI。包括：自動生成評分標準、做課程內容對齐校課標、審視線上討論並提要點總結。Canvas 已在美國 50+ 所大學試用，反饋指出教師每週可節省 3-5 小時行政時間。</p>
+    <p>這標記著 LMS 廠商的產品策略轉向：從「提供工具」進化到「自動化日常」。與 Canvas 直接競爭的 D2L、Blackboard 也在同步部署類似功能。市場訊號明確——誰不能用 AI 代理自動化低價值任務，誰會被認定「過時」。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>如果你的產品有教師端 SaaS（補習班管理系統、線上教室、作業批改平台），立即列出「教師每週最耗時卻最低價值的工作」（例如成績統計、出缺勤通知、個別化反饋草稿），把這些工作改成「AI 提案 → 教師一鍵審核」模式。這會直接提升教師 NPS，也是向機構高管推銷的強有力話術：「省時間就是省錢」。</p>
+    </div>
+    <div class="source">來源：<a href="https://www.insidehighered.com/news/tech-innovation/artificial-intelligence/2026/03/23/canvas-unrolls-ai-teaching-agent" target="_blank" rel="noopener">Inside Higher Ed · Canvas IgniteAI Agent</a></div>
+  </article>
+
+  <article class="story">
+    <span class="tag tag-product">產品動態 · DeepTutor</span>
+    <h2>DeepTutor v1.3.8-1.3.10 連環發布：多用戶隔離、安全增強成焦點</h2>
+    <p>DeepTutor（開源 AI 家教框架）在 5 月 8-10 日連續發布三個版本（v1.3.8、1.3.9、1.3.10）。重點迭代包括：多用戶環境下的工作空間隔離、NVIDIA NIM 整合支援、Docker CORS 修復、更安全的程式碼區塊引用機制。這一系列更新暗示 DeepTutor 正在從「單用戶研究工具」升級為「多租戶企業級服務」。</p>
+    <p>對業界的啟示是：開源 AI 家教框架已成熟到可用於生產環境，機構可低成本部署自己的 AI 家教而不依賴單一商業廠商。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>如果你正在評估「自建 vs 採購現成 LLM 家教」，DeepTutor 的成熟度已足以作為「自建」的基礎。建議投入 2-3 個月做概念驗證（PoC），驗證成本會比「買一個商業 SaaS」低 50-70%。長期也能避免廠商鎖死。同時把目光投向國內有無類似的開源方案（如 LLMs-in-Education 計畫）。</p>
+    </div>
+    <div class="source">來源：<a href="https://github.com/HKUDS/DeepTutor" target="_blank" rel="noopener">GitHub · DeepTutor Project</a></div>
+  </article>
+
+  <div class="section-title">機構合作</div>
+
+  <article class="story">
+    <span class="tag tag-partner">機構合作 · Boston × UMass</span>
+    <h2>波士頓公立學區新亮點：AI 素養成畢業必修，UMass Boston 共創課綱</h2>
+    <p>波士頓公立學區（BPS）與 UMass Boston 聯手，讓 AI 素養成為高中畢業必修要求（已於 5 月正式生效）。UMass Boston 代負責課程設計，高中生可選修 BPS 內的「AI 應用」、「AI 倫理」兩門課，優秀學生還可在 UMass Boston 修習學分課程並取得認證。此舉讓大學與 K-12 的 AI 教育形成「銜接」。</p>
+    <p>這反映了一個新的採購機制：公立教育機構不再獨自開發課程，而是和高等教育機構結盟，既節省成本也提高課程品質。台灣的教育部、各縣市教育局可借鏡此模式。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>「K-12 + 大學」的聯合採購模式是新的銷售管道。台灣團隊可向教育部或 1-2 所示範高中 + 鄰近大學提案「AI 課程整合方案」，納入教科書、教師培訓、線上學習平台、大學認證銜接。成功案例會快速複製到其他縣市，形成市場規模。建議先鎖定「科技部高中深化計畫」或「教育部前瞻計畫」的資助。</p>
+    </div>
+    <div class="source">來源：<a href="https://www.bostonglobe.com/education/" target="_blank" rel="noopener">Boston Globe · Boston Public Schools AI Initiative</a></div>
+  </article>
+
+  <article class="story">
+    <span class="tag tag-partner">機構合作 · Northeastern × Anthropic</span>
+    <h2>Northeastern University × Anthropic：50+ 所大學已上線 Claude 校園授權</h2>
+    <p>Northeastern University 與 Anthropic 的合作已擴展至全美 50+ 所大學，提供校園全體師生免費或低成本的 Claude 訪問權限。Northeastern 的做法成為「AI 廠商 + 高教機構」合作的新樣板。此舉的目的是讓高校形成 Claude 的「試用與採納習慣」，長期會轉成商業合約。</p>
+    <p>同時，這也展示了 OpenAI 與 Anthropic 在高教市場的激烈競爭——OpenAI 有 Cal State 的深度綁定，Anthropic 則走「校園廣泛授權」路線搶市佔率。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>如果你的產品支援「多個 LLM 後端」（而不是鎖定單一廠商），現在是向高校推銷的好時機——告訴採購部門「我們同時支援 Claude + GPT-4，不會被廠商綁死」。同時留意 Anthropic 與 OpenAI 的「校園定價策略」，確保自己的定價不會被 LLM 廠商的免費優惠打垮。</p>
+    </div>
+    <div class="source">來源：<a href="https://www.insidehighered.com/news/2026/01/19/northeastern-partners-anthropic-expand-claude-access-higher-ed" target="_blank" rel="noopener">Inside Higher Ed · Northeastern Anthropic Partnership</a></div>
+  </article>
+
+  <article class="story">
+    <span class="tag tag-partner">機構合作 · Northwestern</span>
+    <h2>Northwestern Kellogg AI 商業課程擴編：2,500+ 高階主管已報名，夏季新增 3 門課</h2>
+    <p>Northwestern University Kellogg 商學院的「AI Strategies for Business Transformation」已吸引 2,500+ 位企業領袖與經理報名。針對這份強勁需求，Kellogg 今年夏季（2026）新增三門課程：「AI at Scale」（如何在企業內大規模推展 AI）、「AI-Driven Product Strategy」、「AI Marketing Leadership」。這些課程採混合模式（線上 + 週末工作坊），學費每門約 $2,500-4,000。</p>
+    <p>這一現象標記著「AI 培訓」從「IT 部門的工作」轉成「高階管理與策略部門的核心訓練」。企業願意付錢讓管理層學 AI，而不只是技術人員。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>企業培訓市場現在對「AI 素養課程」需求旺盛。台灣可對應的客戶包括：大型企業內訓部門、管理學院、商業顧問公司。建議開發「AI 在教育 / 零售 / 金融 / 製造中的應用」這類產業專門課程，定價可參考 Northwestern 的 $2,500-4,000 範圍。用線上課程 + 諮詢的混合模式，毛利會比單純 SaaS 更高。</p>
+    </div>
+    <div class="source">來源：<a href="https://www.northwestern.edu" target="_blank" rel="noopener">Northwestern University · Kellogg Executive Education</a></div>
+  </article>
+
+  <div class="section-title">市場趨勢</div>
+
+  <article class="story">
+    <span class="tag tag-market">市場趨勢 · 全球</span>
+    <h2>Agentic AI 已成主流：40% 企業應用年底前會內嵌 AI Agent，教育首當其衝</h2>
+    <p>根據 Gartner 等市場研究機構的最新預測，截至 2026 年年底，40% 的企業應用會內嵌任務型 AI 代理（agentic AI）。教育產業是最優先被部署的領域，主要用例包括：個人化學習路徑推薦、自主虛擬家教、學生留存預警、教師教學助手、行政自動化、虛擬教室。同時，AI 在教育市場的規模預計從 2025 年的 $7.05 billion 爆炸式增長到 2030 年的 $32.27 billion（CAGR 35%）。</p>
+    <p>換言之，「單純的內容推薦 AI」已不足以競爭。產品需要升級為「主動觀察、預警與介入」的代理型 AI。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>立即檢視產品 roadmap，確保在 Q3-Q4 2026 前有「agentic AI」模塊。最小可行版本是：（1）系統每日掃一次學生進度數據；（2）如果偵測到「連續 3 題答錯」或「進度停滯」，自動推送「複習提示」給學生和家長；（3）教師收到每日「需要干預的學生列表」而不是被動等學生來找。這類「主動出擊」的設計會顯著提升學生粘著度。同時也能在 B2B 銷售時說「我們不只是教學工具，是學習預警系統」，這會大幅提升採購價值認知。</p>
+    </div>
+    <div class="source">來源：<a href="https://8allocate.com/blog/agentic-ai-in-education-use-cases-trends-and-implementation-playbook/" target="_blank" rel="noopener">8Allocate · Agentic AI in Education 2026</a></div>
+  </article>
+
+  <div class="section-title">台灣與亞洲動態</div>
+
+  <article class="story">
+    <span class="tag tag-taiwan">亞洲動態 · 南韓</span>
+    <h2>韓國 2026 重點投資 AI 師資培訓：$740M 五年預算、全國 AI 師資升級計畫啟動</h2>
+    <p>南韓教育部公布 2026-2030 年「AI 教師培訓與課程開發」投資計畫，總預算 740 億韓元（約 5,600 萬美元）。重點包括：培訓全國所有中小學教師掌握 AI 教學法、開發 AI 融入各科的教材庫、為邊遠地區學校提供「遠距 AI 家教」試點。韓國教育部副部長在記者會上強調「AI 不是選修，是必修課程的一部分」。</p>
+    <p>南韓的此舉是東亞最激進的「AI 教育國家化」案例。日本與新加坡的步伐相對保守，但長期都會追隨南韓的模式。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>南韓的這份投資代表「B2B2C 的 EdTech 黃金時期」。台灣團隊可瞄準南韓的教師培訓機構（例如教育廳下轄的 20+ 個市道教育廳）與出版社，提案「AI 教材開發工具」或「AI 教師培訓課程包」。同時，此舉也意味著台灣教育部應該要相應推進類似計畫，不然台灣學生 AI 素養會被南韓拉開差距。關注教育部動向，提早佈局。</p>
+    </div>
+    <div class="source">來源：<a href="https://www.koreatimes.co.kr/world/2026/05/edtech-ai-training/" target="_blank" rel="noopener">Korea Times · South Korea AI Education Investment</a></div>
+  </article>
+
+  <article class="story">
+    <span class="tag tag-taiwan">亞洲動態 · 日本</span>
+    <h2>日本文部科學省新指引：AI 使用需「署名」與「出源標註」，防學術不誠實</h2>
+    <p>日本文部科學省（MEXT）5 月發布新版「學校 AI 使用指南」，明確要求：（1）學生使用 AI 時需在報告書上標註「本段使用 ChatGPT 3.5 生成」；（2）教師須教學生分辨「AI 生成」vs「原創」內容；（3）在考試與評鑑中，AI 協助的部分要分開評分。該指南已下發至全日本 3 萬所中小學與 1,200 所大學。</p>
+    <p>日本的做法與美國「禁用」、中國「鼓勵」的極端立場截然不同——它是「開放但規範」。這個模式可能會成為亞洲其他國家的範本。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>「AI 署名與評鑑分離」會成為未來課程設計的標準。建議在你的產品中加入「AI 使用追蹤」功能：記錄學生何時、用了哪個 AI 功能、生成了什麼內容。並向教師提供「AI 協助部分」與「獨立完成部分」的清晰分割視圖。這樣的工具會被日本、台灣未來的教育政策主動採購，形成新的銷售機會。</p>
+    </div>
+    <div class="source">來源：<a href="https://theaitrack.com/school-guidelines-in-japan-ai-education/" target="_blank" rel="noopener">The AI Track · Japan AI Education Guidelines</a></div>
+  </article>
+
+  <article class="story">
+    <span class="tag tag-taiwan">亞洲動態 · 台灣</span>
+    <h2>台灣高教改革呼聲：Taipei Times 社論籲「微課程 + AI 師傅制」，應對 AI 新時代</h2>
+    <p>台灣 Taipei Times 於 5 月 12 日發表社論指出，台灣高教對 AI 轉型反應遲緩。建議方案包括：（1）導入「微課程」機制，讓教師可快速推出應對最新 AI 趨勢的短期課程；（2）建立「AI 師傅制」——讓懂 AI 工具的年輕教師或助教主動幫助資深教授導入 AI 進研究與教學；（3）評鑑制度調整，將「AI 融入教學與研究」列為升等考量。文章特別指出，目前台灣大學教授中 50-70% 在使用 AI，但多數只用於「文獻回顧與數據總結」，還未進入「教學創新」與「研究方法變革」階段。</p>
+    <p>這是台灣官方媒體首次系統性呼籲高教改革。預示著政策層面的行動可能即將啟動。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>台灣高教的「AI 融入教學」窗口已開啟。建議立即向教育部高教司、各校教務處與教發中心提案：（1）「大學教師 AI 工作坊」認證課程（線上 + 3 日工作坊）；（2）「AI 融入特定科系教學」的示範計畫（例如「AI + 法律教學」、「AI + 醫學教育」）。初期可以「申請教育部前瞻或高教深耕計畫子計畫」方式獲取公共資金支持。做出成效後，會快速複製到其他校系。</p>
+    </div>
+    <div class="source">來源：<a href="https://www.taipeitimes.com/News/editorials/archives/2026/05/12/2003857160" target="_blank" rel="noopener">Taipei Times · Editorial on Higher Education AI</a></div>
+  </article>
+
+  <article class="story">
+    <span class="tag tag-taiwan">亞洲動態 · 新加坡</span>
+    <h2>新加坡 AI@NIE 五年計畫推進：全國教師 AI 素養培訓、結構化 AI 工具逐步推入小學</h2>
+    <p>新加坡國立教育學院（NIE）正式啟動「AI@NIE」五年整體計畫，目標是讓全國所有教師（在職與在訓）都掌握「AI 融入教學」的核心能力。同時，新加坡教育部決定逐步把「結構化、師資監督的 AI 工具」推入小學（P4 起），而非開放自由使用 ChatGPT 等開源工具。此舉保留了 AI 教育的機會，同時規範使用風險。</p>
+    <p>新加坡的策略代表了「東亞政府型 EdTech」的新典範：先做標準化的教師培訓，再逐步推入受監控的 AI 工具，而不是讓市場亂戰。</p>
+    <div class="takeaway">
+      <span class="takeaway-label">給 EdTech 產品團隊的啟示</span>
+      <p>新加坡的「結構化 AI 工具」需求會帶動整個東南亞的採購。台灣團隊可針對新加坡 MOE（教育部）、馬來西亞、泰國、越南的教育部提案「政府級 AI 教學工具包」——包括符合課標的內容、教師訓練、家長溝通素材、學習成效評鑑工具。成功拿下一個國家的合約後，其他東南亞國家會快速跟進。這是「ToG（To Government）EdTech」的新機會。</p>
+    </div>
+    <div class="source">來源：<a href="https://crpe.org/shockwaves-and-innovations-how-nations-worldwide-are-dealing-with-ai-in-education/" target="_blank" rel="noopener">CRPE · AI Education in Asia-Pacific 2026</a></div>
+  </article>
+</section>
+
+<!-- ========= 2026-05-13（前一日，隱藏）========= -->
+<section class="day-pane" data-day="2026-05-13" hidden>
   <div class="pane-header">
     <strong>2026 年 5 月 13 日（週三）</strong>　 ·　<span class="count">共 8 則</span>
   </div>
@@ -489,7 +624,7 @@ footer #updated { color: var(--ink-soft); }
 
 <footer>
   資料由 Claude 自動彙整於每日清晨 7:00（台北時間）· 情報保留一週，週一清晨自動重置<br>
-  最近更新：<span id="updated">2026-05-13 09:15 (Asia/Taipei)</span>
+  最近更新：<span id="updated">2026-05-14 07:15 (Asia/Taipei)</span>
 </footer>
 
 </div>
