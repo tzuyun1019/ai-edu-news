@@ -21,9 +21,9 @@ jobs:
           import os, re, json, urllib.request
           from datetime import datetime, timezone, timedelta
 
-          LINE_TOKEN  = os.environ["LINE_TOKEN"]
-          LINE_USER_ID = os.environ["LINE_USER_ID"]
-          SITE_URL    = os.environ["SITE_URL"]
+          LINE_TOKEN   = os.environ["LINE_TOKEN"].strip()
+          LINE_USER_ID = os.environ["LINE_USER_ID"].strip()
+          SITE_URL     = os.environ["SITE_URL"]
 
           # ── 讀取 index.html ──────────────────────────────────────────
           with open("index.html", encoding="utf-8") as f:
