@@ -49,15 +49,18 @@ jobs:
           # ── 取出各分節與文章標題 ─────────────────────────────────────
           stories = []
           current_section = ""
-          for chunk in re.split(r'(<div class="section-title">|<article class="story">)', pane):
-              sec = re.match(r'<div class="section-title">(.*?)</div>', chunk)
-              if sec:
-                  current_section = sec.group(1)
-                  continue
-              if '<h2>' in chunk:
-                  h2   = re.search(r'<h2>(.*?)</h2>', chunk)
-                  src  = re.search(r'href="([^"]+)"', chunk)
-                  if h2:
+          for item in re.finditer(
+              r'<div class="section-title">(.*?)</div>'
+              r'|<article class="story">(.*?)</article>',
+              pane, re.DOTALL
+          ):
+              if item.group(1) is not None:
+                  current_section = item.group(1).strip()
+              else:
+                  article = item.group(2)
+                  h2  = re.search(r'<h2>(.*?)</h2>', article)
+                  src = re.search(r'href="([^"]+)"', article)
+                  if h2 and current_section:
                       stories.append({
                           "section": current_section,
                           "title":   h2.group(1),
