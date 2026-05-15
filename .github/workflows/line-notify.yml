@@ -1,0 +1,138 @@
+name: LINE Notify on Daily Update
+
+on:
+  push:
+    branches: [main]
+    paths: [index.html]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Parse index.html and send LINE Flex Message
+        env:
+          LINE_TOKEN: ${{ secrets.LINE_TOKEN }}
+          LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
+          SITE_URL: "https://tzuyun1019.github.io/ai-edu-news/"
+        run: |
+          python3 << 'PYEOF'
+          import os, re, json, urllib.request
+          from datetime import datetime, timezone, timedelta
+
+          LINE_TOKEN  = os.environ["LINE_TOKEN"]
+          LINE_USER_ID = os.environ["LINE_USER_ID"]
+          SITE_URL    = os.environ["SITE_URL"]
+
+          # ── 讀取 index.html ──────────────────────────────────────────
+          with open("index.html", encoding="utf-8") as f:
+              html = f.read()
+
+          # ── 台北今日日期 ─────────────────────────────────────────────
+          taipei = timezone(timedelta(hours=8))
+          today  = datetime.now(taipei).strftime("%Y-%m-%d")
+          update_time = datetime.now(taipei).strftime("%Y-%m-%d %H:%M (Asia/Taipei)")
+
+          # ── 找到今日 day-pane ────────────────────────────────────────
+          pane_pat = rf'<section class="day-pane" data-day="{today}">(.*?)</section>'
+          pane_m   = re.search(pane_pat, html, re.DOTALL)
+          if not pane_m:
+              print(f"No pane found for {today}, skipping LINE notify.")
+              exit(0)
+          pane = pane_m.group(1)
+
+          # ── 取出日期標題文字 ─────────────────────────────────────────
+          date_m = re.search(r'<strong>(.*?)</strong>', pane)
+          date_str = date_m.group(1) if date_m else today
+
+          # ── 取出各分節與文章標題 ─────────────────────────────────────
+          stories = []
+          current_section = ""
+          for chunk in re.split(r'(<div class="section-title">|<article class="story">)', pane):
+              sec = re.match(r'<div class="section-title">(.*?)</div>', chunk)
+              if sec:
+                  current_section = sec.group(1)
+                  continue
+              if '<h2>' in chunk:
+                  h2   = re.search(r'<h2>(.*?)</h2>', chunk)
+                  src  = re.search(r'href="([^"]+)"', chunk)
+                  if h2:
+                      stories.append({
+                          "section": current_section,
+                          "title":   h2.group(1),
+                          "url":     src.group(1) if src else SITE_URL,
+                      })
+
+          if not stories:
+              print("No stories found, skipping.")
+              exit(0)
+
+          # ── 建構 Flex Message ────────────────────────────────────────
+          def section_label(name):
+              return {"type": "text", "text": name, "size": "xs",
+                      "weight": "bold", "color": "#7A8F7A", "margin": "md"}
+
+          def story_box(s, is_last):
+              box = {"type": "box", "layout": "vertical", "spacing": "xs",
+                     "contents": [
+                         {"type": "text", "text": s["title"], "weight": "bold",
+                          "size": "sm", "color": "#5C4A3D", "wrap": True}
+                     ]}
+              if not is_last:
+                  return [box, {"type": "separator", "color": "#D4C5B0", "margin": "sm"}]
+              return [box]
+
+          body = []
+          cur_sec = None
+          for i, s in enumerate(stories):
+              if s["section"] != cur_sec:
+                  cur_sec = s["section"]
+                  body.append(section_label(cur_sec))
+              body.extend(story_box(s, i == len(stories) - 1))
+
+          flex = {
+              "type": "flex",
+              "altText": f"📰 教育AI情報更新 {date_str} · 共{len(stories)}則",
+              "contents": {
+                  "type": "bubble", "size": "giga",
+                  "header": {
+                      "type": "box", "layout": "vertical",
+                      "backgroundColor": "#8BA3B4", "paddingAll": "16px",
+                      "contents": [
+                          {"type": "text", "text": "📰 教育 AI 應用情報",
+                           "color": "#FFFFFF", "size": "lg", "weight": "bold"},
+                          {"type": "text", "text": f"{date_str}　·　共 {len(stories)} 則",
+                           "color": "#D4E3ED", "size": "sm", "margin": "xs"},
+                          {"type": "text", "text": f"🕐 {update_time}",
+                           "color": "#B8CEDB", "size": "xs", "margin": "xs"}
+                      ]
+                  },
+                  "body": {
+                      "type": "box", "layout": "vertical",
+                      "backgroundColor": "#F5F0EB", "spacing": "sm",
+                      "paddingAll": "14px", "contents": body
+                  },
+                  "footer": {
+                      "type": "box", "layout": "vertical",
+                      "backgroundColor": "#F5F0EB", "paddingAll": "12px",
+                      "contents": [{
+                          "type": "button",
+                          "action": {"type": "uri", "label": "閱讀完整情報 →", "uri": SITE_URL},
+                          "style": "primary", "color": "#9CAF8B", "height": "sm"
+                      }]
+                  }
+              }
+          }
+
+          payload = json.dumps({"to": LINE_USER_ID, "messages": [flex]}).encode()
+          req = urllib.request.Request(
+              "https://api.line.me/v2/bot/message/push", data=payload,
+              headers={"Content-Type": "application/json",
+                       "Authorization": f"Bearer {LINE_TOKEN}"},
+              method="POST"
+          )
+          with urllib.request.urlopen(req, timeout=30) as resp:
+              print(f"LINE 推播成功！{date_str} 共 {len(stories)} 則")
+              print("Response:", resp.read())
+          PYEOF
